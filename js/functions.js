@@ -43,6 +43,7 @@ function resetForm($form) {
     $form.find("#location_id")[0].selectedIndex = 0;
     $form.find("#category_id")[0].selectedIndex = 0;
     $form.find('[name="organization_form_id"]')[0].checked = true;
+    $('#submit_button').html('Добавить');
 }
 
 //event delegation
@@ -140,7 +141,6 @@ $('#ad_form').submit(function(event) {
                 } else {
                     $(tr).addClass('warning');
                 }
-                $('#submit_button').html('Добавить');
                 resetForm($('#ad_form'));
             }
         },
@@ -149,7 +149,7 @@ $('#ad_form').submit(function(event) {
 
 });
 $('#cancel_button').on('click', function() {
-    $('#submit_button').html('Добавить');
+
     resetForm($('#ad_form'));
 
 });
