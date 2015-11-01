@@ -1,0 +1,21 @@
+.span3 {  
+    height: 520px;
+    overflow: auto;
+}
+
+/*.row {
+    height: 500px;
+}*/
+
+.pagination-centered {
+	    text-align: center;
+}
+
+.centered{
+    margin: 0 auto;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
