@@ -36,6 +36,13 @@ if (request_is_post()) {
 
   $is_edit_mode = isset($_POST['id']);
   
+//submitting unchecked checkboxes
+  if (!isset($_POST['allow_mails'])) {
+	$_POST['allow_mails'] = "";
+  } else {
+	$_POST['allow_mails'] = 1;
+  }
+  
   $ad = new Ad(AdsStorage::sanitizeFormData($_POST));
   $result = $ad->save();
   
