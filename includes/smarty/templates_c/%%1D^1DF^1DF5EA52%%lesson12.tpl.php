@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.25-dev, created on 2015-11-01 16:21:13
+<?php /* Smarty version 2.6.25-dev, created on 2015-11-02 22:59:50
          compiled from lesson12.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'html_radios', 'lesson12.tpl', 35, false),array('function', 'html_options', 'lesson12.tpl', 75, false),array('modifier', 'default', 'lesson12.tpl', 35, false),)), $this); ?>
@@ -33,7 +33,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'html_radios
                             </h4>
                         </div>
                         <div class="panel-body">
-                            <form class="form-horizontal" id="ad_form" method="POST" role="form">
+                            <form class="form-horizontal" id="ads_form" method="POST" role="form">
                                 <div class="form-group form-group-sm">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <?php echo smarty_function_html_radios(array('name' => 'organization_form_id','options' => $this->_tpl_vars['organization_form'],'selected' => ((is_array($_tmp=@$this->_tpl_vars['organization_form_id'])) ? $this->_run_mod_handler('default', true, $_tmp, 0) : smarty_modifier_default($_tmp, 0)),'separator' => "&nbsp;"), $this);?>
@@ -135,10 +135,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'html_radios
 
                                 <div class="col-md-offset-2 col-md-12"> 
                                     <div class="btn-group btn-group-md">
-                                        <button type="submit" name="<?php echo $this->_tpl_vars['button_name']; ?>
-" id="submit_button" value="<?php echo $this->_tpl_vars['button_value']; ?>
-" class="btn btn-default"><?php echo $this->_tpl_vars['button_value']; ?>
-</button>     
+                                        <button type="submit" name="submit" id="submit_button" value="Добавить" class="btn btn-default">Добавить</button>     
                                         <button type="button"  class="btn btn-default" name="cancel" id="cancel_button">Отмена</button>
                                     </div>
                                 </div>

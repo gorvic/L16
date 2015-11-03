@@ -1,6 +1,9 @@
+( function($) {
+
+
 ( function() {
-var h = $("#panel1").height();
-$("#panel2").height(h);
+    var h = $("#panel1").height();
+    $("#panel2").height(h);
 } )();
 
 function getTrBlock(id) {
@@ -15,39 +18,82 @@ function getTrBlock(id) {
 
 }
 
+//cashed variables
+//# = native browser method getElementById(), that's fastest.
+//$(tag) = getElementsByTagName().
+
+//info
+var $container = $('#container');
+var $containerButton = $container.children('button.btn-sm'); //prefix class by tag
+var $containerInfo = $('#container_info');
+
+//form fields and buttons
+var $submitButton = $('#submit_button');
+var $form = $('#ads_form');
+var $formFields = $form.find('input:text, input:password, input:file, #email, select, textarea');
+var $formRadiosAndCheckboxes = $form.find('input:radio, input:checkbox');
+var $title = $form.find("#title");
+var $sellerName = $form.find("#seller_name");
+var $price = $form.find("#price");
+var $locationId = $form.find("#location_id");
+var $categoryId = $form.find("#category_id");
+var $organizationFormId = $form.find('[name="organization_form_id"]');
+var $allowMails = $('#allow_mails');
+var $hiddenField = $('#hiddenField');
+var $organizationFormIdByValue = [
+    $form.find('[name="organization_form_id"][value = "0"]'),
+    $form.find('[name="organization_form_id"][value = "1"]')
+
+]
+
+var $table = $('#ads_table');
+
+
 function info(response) {
+
     if (response.status == 'success') {
-        $('#container').removeClass('alert-danger').addClass('alert-info');
-        $('#container>.btn-sm').removeClass('btn-danger').addClass('btn-info')
-        $('#container_info').html(response.message);
-        $('#container').fadeIn('slow');
+        $container.removeClass('alert-danger').addClass('alert-info');
+        $containerButton.removeClass('btn-danger').addClass('btn-info')
+        $containerInfo.html(response.message);
+        $container.fadeIn('slow');
     } else if (response.status == 'error') {
-        $('#container').removeClass('alert-info').addClass('alert-danger');
-        $('#container>.btn-sm').removeClass('btn-info').addClass('btn-danger')
-        $('#container_info').html(response.message);
-        $('#container').fadeIn('slow');
+        $container.removeClass('alert-info').addClass('alert-danger');
+        $containerButton.removeClass('btn-info').addClass('btn-danger')
+        $containerInfo.html(response.message);
+        $container.fadeIn('slow');
     }
 
     ( function() {
         setTimeout(function() {
-            $('#container').fadeOut("slow")
+            $container.fadeOut("slow")
         }, 2000);
     } )();
 }
 
-function resetForm($form) {
-    $form.find('input:text, input:password, input:file, #email, select, textarea').val('');
-    $form.find('input:radio, input:checkbox')
+function resetForm() {
+    $formFields.val('');
+    $formRadiosAndCheckboxes
         .removeAttr('checked').removeAttr('selected');
 
-    $form.find("#location_id")[0].selectedIndex = 0;
-    $form.find("#category_id")[0].selectedIndex = 0;
-    $form.find('[name="organization_form_id"]')[0].checked = true;
-    $('#submit_button').html('Добавить');
+    $locationId[0].selectedIndex = 0;
+    $categoryId[0].selectedIndex = 0;
+    $organizationFormId[0].checked = true;
+    $submitButton.html('Добавить');
+
+    if ($hiddenField.length) {
+        $hiddenField.remove();
+    }
 }
 
 //event delegation
 $('tbody').on('click', 'a.btn.btn-danger', function() {
+
+    var isEditMode = $('#hiddenField').length ? true : false;
+    if (isEditMode) {
+        $containerInfo.html('First finish updating your current ad');
+        $container.fadeIn('slow');
+        return false;
+    }
 
     var $row = $(this).closest('tr');
     var id = $row[0].getAttribute('id');
@@ -64,6 +110,7 @@ $('tbody').on('click', 'a.btn.btn-danger', function() {
         $row.fadeOut('slow', info(response)).remove();
 
     });
+
 }).on('click', 'a.btn.btn-success', function() { //Edit form
 
     var $row = $(this).closest('tr');
@@ -81,12 +128,14 @@ $('tbody').on('click', 'a.btn.btn-danger', function() {
         $.each(response.data, function(name, value) {
 
             if (name == 'allow_mails') {
-                $('#' + name)[0].checked = (value == 1) ? true : false;
+                $allowMails[0].checked = (value == 1) ? true : false;
+                return true;
             } else if (name == 'organization_form_id') {
-                $('[name="' + name + '"][value="' + value + '"]', '#ad_form')[0].checked = true;
+                $organizationFormIdByValue[value][0].checked = true;
+                return true;
             } else if (name == 'id') {
                 $('#hiddenField').remove();
-                $('<input>',
+                $hiddenField = $('<input>',
                     {
                         type: 'hidden',
                         id: 'hiddenField',
@@ -94,7 +143,7 @@ $('tbody').on('click', 'a.btn.btn-danger', function() {
                         value: value
                     }
                 ).appendTo('.btn-group.btn-group-md');
-                $('#submit_button').html('Записать изменения');
+                $submitButton.html('Записать изменения');
                 return true;
             }
             $('#' + name).val(value);
@@ -103,45 +152,48 @@ $('tbody').on('click', 'a.btn.btn-danger', function() {
     });
 });
 
-$('#ad_form').submit(function(event) {
+$form.submit(function(event) {
 
 
     // event.preventDefault();
     // event.stopPropagation();
     // event.stopImmediatePropagation();
 
-    var url = 'index.php'
-    var isEditMode = $('#hiddenField').length ? true : false;
+    var url = 'index.php';
+
+    $hiddenField = $('#hiddenField'); //refresh variable
+    var isEditMode = $hiddenField.length ? true : false;
 
     $.post(url,
         $(this).serialize(), function(response, textStatus, xhr) {
             info(response);
-            if (response.message = 'success') { //fill table
+            if (response.status == 'success') { //fill table
                 //if isEditMode get tr element in table for updating
                 if (isEditMode) {
-                    $hiddenField = $('#hiddenField');
                     tr = ('tr[id=' + $hiddenField.val() + ']');
 
                     //delete hidden field, if exists
-                    $('#hiddenField').remove();
+                    $hiddenField.remove();
 
                     //update td in tr
-                    $("td:eq(0)", tr).html($('#title').val());
-                    $("td:eq(2)", tr).html($('#seller_name').val());
-                    $("td:eq(3)", tr).html($('#price').val());
+                    $table.find(tr + ' td:eq(0)').html($title.val());
+                    $table.find(tr + 'td:eq(2)').html($sellerName.val());
+                    $table.find(tr + 'td:eq(3)').html($price.val());
                 } else {
                     //append new tr
-                    $('tbody tr:last').after(getTrBlock(response.data.id));
+                    $table.find('tr').last().after(getTrBlock(response.data.id));
                     tr = ('tr[id=' + response.data.id + ']');
                 }
 
                 //organization has 'warning' class
-                if ($('[name ="organization_form_id"]:checked ', '#ad_form').val() == '0') {
+                if ($organizationFormId.filter('input:checked').val() == '0') {
                     $(tr).removeClass('warning');
                 } else {
                     $(tr).addClass('warning');
                 }
-                resetForm($('#ad_form'));
+
+                resetForm();
+
             }
         },
         'json');
@@ -150,6 +202,8 @@ $('#ad_form').submit(function(event) {
 });
 $('#cancel_button').on('click', function() {
 
-    resetForm($('#ad_form'));
+    resetForm();
+
 
 });
+} )(jQuery);

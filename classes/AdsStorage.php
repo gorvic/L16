@@ -83,35 +83,35 @@ class AdsStorage {
 	$smarty->assign('subcategories', Category::get_array_of_subcategories());
 	$smarty->assign('ad_person', 'Ваше имя');
 	
-	if ($edit_id) {
-
-	  $ad = $this->getAd($edit_id);
-	  if (empty($ad)) {
-	    die('Неверный id объявления');
-	  }
-	  
-	  $smarty->assign('button_name', 'edit');
-	  $smarty->assign('button_value', 'Записать изменения');
-	  $smarty->assign('default_edit_id', $edit_id);
-	  
-	  $smarty->assign('is_allow_mail', $ad->getAllowMails() == 1 ? 'checked' : '');
-	  $smarty->assign('ad_person', $ad->getOrganizationFormId() == 0 ? 'Ваше имя' : 'Название организации');
-	  
-	  $arr_fields = $ad->getFieldsForTemplate();
-	  foreach ($arr_fields as $field => $value) {
-		$smarty->assign($field, $value);
-	  }
-	  
-	} else {
-
-	  $smarty->assign('button_name', 'submit');
-	  $smarty->assign('button_value', 'Добавить');
-	  $smarty->assign('default_edit_id', '');
-	  
-	}
+//	if ($edit_id) {
+//
+//	  $ad = $this->getAd($edit_id);
+//	  if (empty($ad)) {
+//	    die('Неверный id объявления');
+//	  }
+//	  
+//	  $smarty->assign('button_name', 'edit');
+//	  $smarty->assign('button_value', 'Записать изменения');
+//	  $smarty->assign('default_edit_id', $edit_id);
+//	  
+//	  $smarty->assign('is_allow_mail', $ad->getAllowMails() == 1 ? 'checked' : '');
+//	  $smarty->assign('ad_person', $ad->getOrganizationFormId() == 0 ? 'Ваше имя' : 'Название организации');
+//	  
+//	  $arr_fields = $ad->getFieldsForTemplate();
+//	  foreach ($arr_fields as $field => $value) {
+//		$smarty->assign($field, $value);
+//	  }
+//	  
+//	} else {
+//
+//	  $smarty->assign('button_name', 'submit');
+//	  $smarty->assign('button_value', 'Добавить');
+//	  $smarty->assign('default_edit_id', '');
+//	  
+//	}
   }
   
-  public static function sanitizeFormData(array $form_array) {
+  public static function sanitizeHTTPQueriesData(array $form_array) {
 
 	$tmp_form_array = $form_array;
 	
@@ -119,12 +119,9 @@ class AdsStorage {
 	foreach ($tmp_form_array as $key => $value) {
 	  $tmp_form_array[$key] = strip_tags($value);
 	}
-
-	//checking checkbox. if it's not checked then there is no value in POST array
-	if (!isset($tmp_form_array['allow_mails'])) {
-	  $tmp_form_array['allow_mails'] = "";
-	}
 	
+	
+
 	return $tmp_form_array;
   }
 

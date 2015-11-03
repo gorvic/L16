@@ -29,7 +29,7 @@
                             </h4>
                         </div>
                         <div class="panel-body">
-                            <form class="form-horizontal" id="ad_form" method="POST" role="form">
+                            <form class="form-horizontal" id="ads_form" method="POST" role="form">
                                 <div class="form-group form-group-sm">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         {html_radios name="organization_form_id" options=$organization_form selected=$organization_form_id|default:0 separator="&nbsp;"}
@@ -117,7 +117,7 @@
 
                                 <div class="col-md-offset-2 col-md-12"> 
                                     <div class="btn-group btn-group-md">
-                                        <button type="submit" name="{$button_name}" id="submit_button" value="{$button_value}" class="btn btn-default">{$button_value}</button>     
+                                        <button type="submit" name="submit" id="submit_button" value="Добавить" class="btn btn-default">Добавить</button>     
                                         <button type="button"  class="btn btn-default" name="cancel" id="cancel_button">Отмена</button>
                                     </div>
                                 </div>
@@ -134,6 +134,7 @@
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+{*        <script src="./js/jquery.event-trace.js"></script>*}
         <script>window.jQuery || document.write('<script src="js/jquery-2.1.4.min.js"><\/script>');</script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script src="./js/functions.js"></script>             
