@@ -36,10 +36,8 @@ if (request_is_post()) {
   
 } else {
 
-//could be chained methods -> -> ->
-  $storage = AdsStorage::getInstance();
-  $storage->fillStorage();
-  $storage->prepareFieldsOfAd();
-  $storage->prepareTableOfAds();
-  $storage->display();
+  /*@var $storage AdsStorage*/
+  
+  $storage = AdsStorage::getInstance($smarty);
+  $storage->fillStorage()->display();
 }

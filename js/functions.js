@@ -32,14 +32,10 @@ var $submitButton = $('#submit_button');
 var $form = $('#ads_form');
 var $formFields = $form.find('input:text, input:password, input:file, #email, select, textarea');
 var $formRadiosAndCheckboxes = $form.find('input:radio, input:checkbox');
-var $title = $form.find("#title");
-var $sellerName = $form.find("#seller_name");
-var $price = $form.find("#price");
-var $locationId = $form.find("#location_id");
-var $categoryId = $form.find("#category_id");
+
 var $organizationFormId = $form.find('[name="organization_form_id"]');
-var $allowMails = $('#allow_mails');
-var $hiddenField = $('#hiddenField');
+
+
 var $organizationFormIdByValue = [
     $form.find('[name="organization_form_id"][value = "0"]'),
     $form.find('[name="organization_form_id"][value = "1"]')
@@ -75,8 +71,8 @@ function resetForm() {
     $formRadiosAndCheckboxes
         .removeAttr('checked').removeAttr('selected');
 
-    $locationId[0].selectedIndex = 0;
-    $categoryId[0].selectedIndex = 0;
+    $('#location_id')[0].selectedIndex = 0;
+    $('#category_id')[0].selectedIndex = 0;
     $organizationFormId[0].checked = true;
     $submitButton.html('Добавить');
 
@@ -128,14 +124,15 @@ $('tbody').on('click', 'a.btn.btn-danger', function() {
         $.each(response.data, function(name, value) {
 
             if (name == 'allow_mails') {
-                $allowMails[0].checked = (value == 1) ? true : false;
+                $('#allow_mails')[0].checked = (value == 1) ? true : false;
                 return true;
             } else if (name == 'organization_form_id') {
                 $organizationFormIdByValue[value][0].checked = true;
                 return true;
             } else if (name == 'id') {
                 $('#hiddenField').remove();
-                $hiddenField = $('<input>',
+                //$hiddenField = 
+                $('<input>',
                     {
                         type: 'hidden',
                         id: 'hiddenField',
@@ -160,8 +157,7 @@ $form.submit(function(event) {
     // event.stopImmediatePropagation();
 
     var url = 'index.php';
-
-    $hiddenField = $('#hiddenField'); //refresh variable
+    var $hiddenField = $('#hiddenField')
     var isEditMode = $hiddenField.length ? true : false;
 
     $.post(url,
@@ -173,12 +169,12 @@ $form.submit(function(event) {
                     tr = ('tr[id=' + $hiddenField.val() + ']');
 
                     //delete hidden field, if exists
-                    $hiddenField.remove();
+                    $('#hiddenField').remove();
 
                     //update td in tr
-                    $table.find(tr + ' td:eq(0)').html($title.val());
-                    $table.find(tr + 'td:eq(2)').html($sellerName.val());
-                    $table.find(tr + 'td:eq(3)').html($price.val());
+                    $table.find(tr + ' td:eq(0)').html($('#title').val());
+                    $table.find(tr + 'td:eq(2)').html($('#seller_name').val());
+                    $table.find(tr + 'td:eq(3)').html($('#price').val());
                 } else {
                     //append new tr
                     $table.find('tr').last().after(getTrBlock(response.data.id));
